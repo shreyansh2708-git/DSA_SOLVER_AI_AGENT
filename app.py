@@ -48,30 +48,6 @@ html, body, [class*="css"] { font-family: 'Inter', sans-serif; }
     background: #1e1f3a; border: 1px solid #6366f1; color: #a5b4fc;
     padding: 0.25rem 0.75rem; border-radius: 20px; font-size: 0.75rem; font-weight: 600;
 }
-.api-card {
-    background: #1e293b; border: 1px solid #2d3748;
-    border-radius: 12px; padding: 1.25rem; margin-bottom: 1rem;
-}
-.api-card-title {
-    font-size: 0.7rem; font-weight: 600; text-transform: uppercase;
-    letter-spacing: 1px; color: #6366f1; margin-bottom: 0.75rem;
-}
-.api-ready {
-    background: #0d2420; border: 1px solid #10b981;
-    border-radius: 8px; padding: 0.5rem 0.75rem;
-    color: #6ee7b7; font-size: 0.8rem; margin-top: 0.5rem;
-}
-.api-missing {
-    background: #2d1515; border: 1px solid #ef4444;
-    border-radius: 8px; padding: 0.5rem 0.75rem;
-    color: #fca5a5; font-size: 0.8rem; margin-top: 0.5rem;
-}
-.stTextInput input {
-    background: #0f1117 !important; border: 1px solid #334155 !important;
-    border-radius: 8px !important; color: #e2e8f0 !important;
-    font-family: 'JetBrains Mono', monospace !important; font-size: 0.8rem !important;
-}
-.stTextInput input:focus { border-color: #6366f1 !important; }
 .stTextArea textarea {
     background: #1e293b !important; border: 1px solid #334155 !important;
     border-radius: 12px !important; color: #e2e8f0 !important;
@@ -91,10 +67,6 @@ html, body, [class*="css"] { font-family: 'Inter', sans-serif; }
 .stButton > button:hover {
     transform: translateY(-1px) !important;
     box-shadow: 0 8px 25px rgba(99,102,241,0.4) !important;
-}
-.stButton > button:disabled {
-    background: #334155 !important; cursor: not-allowed !important;
-    transform: none !important; box-shadow: none !important;
 }
 .pipeline-step {
     background: #1e293b; border: 1px solid #2d3748; border-radius: 10px;
@@ -139,6 +111,15 @@ section[data-testid="stSidebar"] .block-container { padding: 1.5rem 1rem !import
     display: flex; align-items: center; gap: 0.5rem;
     font-size: 0.8rem; color: #94a3b8; padding: 0.35rem 0;
 }
+.free-badge {
+    background: linear-gradient(135deg, #064e3b, #065f46);
+    border: 1px solid #10b981; border-radius: 10px;
+    padding: 0.75rem 1rem; margin-bottom: 1rem; text-align: center;
+}
+.free-badge-title {
+    color: #6ee7b7; font-size: 1rem; font-weight: 700; margin-bottom: 0.25rem;
+}
+.free-badge-sub { color: #a7f3d0; font-size: 0.75rem; }
 .info-box {
     background: #1e1f3a; border: 1px solid #3730a3; border-radius: 10px;
     padding: 1rem 1.25rem; margin: 1rem 0; font-size: 0.875rem; color: #a5b4fc;
@@ -198,49 +179,10 @@ with st.sidebar:
     </div>
     """, unsafe_allow_html=True)
 
-    # ── API Key inputs ────────────────────────────────────────────────────────
-    st.markdown('<div class="api-card"><div class="api-card-title">🔑 API Keys</div>', unsafe_allow_html=True)
-
-    groq_input = st.text_input(
-        "Groq API Key",
-        value=st.session_state.groq_key,
-        type="password",
-        placeholder="gsk_...",
-        help="Free at console.groq.com"
-    )
-    if groq_input:
-        st.session_state.groq_key = groq_input
-
-    tavily_input = st.text_input(
-        "Tavily API Key",
-        value=st.session_state.tavily_key,
-        type="password",
-        placeholder="tvly-...",
-        help="Free at app.tavily.com"
-    )
-    if tavily_input:
-        st.session_state.tavily_key = tavily_input
-
-    groq_ok = bool(st.session_state.groq_key)
-    tavily_ok = bool(st.session_state.tavily_key)
-
-    if groq_ok:
-        st.markdown('<div class="api-ready">✅ Groq key loaded</div>', unsafe_allow_html=True)
-    else:
-        st.markdown('<div class="api-missing">❌ Groq key missing</div>', unsafe_allow_html=True)
-
-    if tavily_ok:
-        st.markdown('<div class="api-ready">✅ Tavily key loaded</div>', unsafe_allow_html=True)
-    else:
-        st.markdown('<div class="api-missing">❌ Tavily key missing</div>', unsafe_allow_html=True)
-
-    st.markdown('</div>', unsafe_allow_html=True)
-
     st.markdown("""
-    <div class="sidebar-card">
-        <div class="sidebar-card-title">🔗 Get Free Keys</div>
-        <div class="sidebar-item">🤖 <a href="https://console.groq.com" target="_blank" style="color:#a5b4fc;">console.groq.com</a></div>
-        <div class="sidebar-item">🔍 <a href="https://app.tavily.com" target="_blank" style="color:#a5b4fc;">app.tavily.com</div>
+    <div class="free-badge">
+        <div class="free-badge-title">🆓 100% Free to Use</div>
+        <div class="free-badge-sub">No sign up · No API key needed · No limits</div>
     </div>
     """, unsafe_allow_html=True)
 
@@ -259,12 +201,34 @@ with st.sidebar:
 
     st.markdown("""
     <div class="sidebar-card">
+        <div class="sidebar-card-title">🎯 Platforms</div>
+        <div class="sidebar-item">💻 <span>LeetCode</span></div>
+        <div class="sidebar-item">⚔️ <span>Codeforces</span></div>
+        <div class="sidebar-item">🍳 <span>CodeChef</span></div>
+        <div class="sidebar-item">💼 <span>HackerRank</span></div>
+        <div class="sidebar-item">🏢 <span>Company OAs</span></div>
+    </div>
+    """, unsafe_allow_html=True)
+
+    st.markdown("""
+    <div class="sidebar-card">
         <div class="sidebar-card-title">🛠️ Stack</div>
         <div class="sidebar-item">🤖 <span>Llama 3.3 70B (Groq)</span></div>
         <div class="sidebar-item">🔗 <span>LangGraph</span></div>
-        <div class="sidebar-item">🗄️ <span>ChromaDB RAG</span></div>
+        <div class="sidebar-item">🗄️ <span>FAISS RAG</span></div>
         <div class="sidebar-item">🌐 <span>Tavily Search</span></div>
         <div class="sidebar-item">💡 <span>C++17 Output</span></div>
+    </div>
+    """, unsafe_allow_html=True)
+
+    st.markdown("""
+    <div class="sidebar-card">
+        <div class="sidebar-card-title">⚡ Optimizations</div>
+        <div class="sidebar-item">🗜️ <span>Context compression</span></div>
+        <div class="sidebar-item">✂️ <span>~55% less token usage</span></div>
+        <div class="sidebar-item">🔀 <span>Merged code generation</span></div>
+        <div class="sidebar-item">📐 <span>Split system prompts</span></div>
+        <div class="sidebar-item">🚀 <span>3 LLM calls total</span></div>
     </div>
     """, unsafe_allow_html=True)
 
@@ -277,11 +241,12 @@ st.markdown("""
     <div class="hero-badges">
         <span class="badge-highlight">⚡ Optimal Solutions</span>
         <span class="badge-highlight">🏆 Beats 90%+ Runtime</span>
+        <span class="badge-highlight">🆓 Free to Use</span>
         <span class="badge">💻 LeetCode</span>
         <span class="badge">⚔️ Codeforces</span>
         <span class="badge">🍳 CodeChef</span>
         <span class="badge">🔍 RAG-Powered</span>
-        <span class="badge">🆓 Free APIs</span>
+        <span class="badge">✂️ Low Token Usage</span>
     </div>
 </div>
 """, unsafe_allow_html=True)
@@ -306,19 +271,7 @@ Constraints: 1 <= N <= 10^5, -10^4 <= A[i] <= 10^4
 Input: 8 / -2 1 -3 4 -1 2 1 -5
 Output: 6"""
     )
-
-    keys_ready = bool(st.session_state.groq_key) and bool(st.session_state.tavily_key)
-    solve_btn = st.button(
-        "⚡ Solve & Optimize",
-        type="primary",
-        disabled=not keys_ready
-    )
-
-    if not keys_ready:
-        st.markdown(
-            "<p style='color:#f59e0b; font-size:0.8rem; margin-top:0.5rem;'>⚠️ Add your Groq and Tavily API keys in the sidebar to enable solving.</p>",
-            unsafe_allow_html=True
-        )
+    solve_btn = st.button("⚡ Solve & Optimize", type="primary")
 
 with col_info:
     st.markdown("""
@@ -333,8 +286,9 @@ with col_info:
         </div>
     </div>
     <div class="info-box" style="margin-top:0;">
-        ℹ️ Runs <b>7 pipeline steps</b>.<br>
-        Includes <b>optimization pass</b>.<br>
+        ℹ️ Runs <b>7 pipeline steps</b><br>
+        Includes <b>optimization pass</b><br>
+        Only <b>3 LLM calls</b> total<br>
         Avg time: <b>40–60 seconds</b>
     </div>
     """, unsafe_allow_html=True)
