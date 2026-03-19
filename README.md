@@ -9,7 +9,7 @@ programming platforms and LeetCode. Built with LangGraph, RAG, and Groq.
 ![License](https://img.shields.io/badge/License-MIT-yellow)
 
 ## 🚀 Live Demo
-[dsa-agent.streamlit.app](https://dsa-agent.streamlit.app)
+[dsa-agent.streamlit.app](https://dsa-agent0.streamlit.app/)
 
 ## ✨ Features
 - 7-node LangGraph agentic pipeline
