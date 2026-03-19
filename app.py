@@ -166,9 +166,9 @@ hr { border-color: #2d3748 !important; }
 
 # ── Session state init ────────────────────────────────────────────────────────
 if "groq_key" not in st.session_state:
-    st.session_state.groq_key = os.getenv("GROQ_API_KEY", "")
+    st.session_state.groq_key = st.secrets.get("GROQ_API_KEY", os.getenv("GROQ_API_KEY", ""))
 if "tavily_key" not in st.session_state:
-    st.session_state.tavily_key = os.getenv("TAVILY_API_KEY", "")
+    st.session_state.tavily_key = st.secrets.get("TAVILY_API_KEY", os.getenv("TAVILY_API_KEY", ""))
 if "kb_ready" not in st.session_state:
     st.session_state.kb_ready = False
 
