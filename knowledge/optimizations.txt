@@ -1,0 +1,88 @@
+OPTIMIZATION: O(N^2) to O(N log N) — Sorting + Binary Search
+WHEN: Nested loops searching for pairs, checking existence, finding bounds
+UPGRADE: Sort array first. Replace inner linear scan with binary search (lower_bound/upper_bound).
+EXAMPLE: Two sum sorted array → two pointers O(N). Count pairs with sum < K → sort + binary search O(N log N).
+CPP: lower_bound(v.begin(), v.end(), target) - v.begin()
+
+OPTIMIZATION: O(N^2) to O(N) — Sliding Window
+WHEN: Subarray/substring problems with a constraint on sum, count, or uniqueness
+UPGRADE: Replace nested loops with variable sliding window. Expand right, shrink left.
+EXAMPLE: Longest subarray with sum <= K → sliding window O(N) instead of O(N^2).
+CPP: unordered_map for frequency, two pointers l and r.
+
+OPTIMIZATION: O(N^2) DP to O(N log N) — LIS with Binary Search
+WHEN: Longest increasing/non-decreasing subsequence
+UPGRADE: Instead of dp[i] = max over all j < i, maintain tails array with binary search.
+CPP: lower_bound on tails array. tails.size() is the answer.
+
+OPTIMIZATION: 2D DP Space to O(N) Rolling Array
+WHEN: DP table where dp[i][j] only depends on dp[i-1][j] and dp[i][j-1]
+UPGRADE: Use two 1D arrays (prev and curr) instead of full 2D table.
+EXAMPLE: LCS, Edit Distance, 0/1 Knapsack
+CPP: vector<int> prev(m+1), curr(m+1). Swap after each row.
+
+OPTIMIZATION: O(N) Space to O(1) — Two Pointers In-Place
+WHEN: Problems on sorted arrays asking for pairs, triplets, or partitioning
+UPGRADE: Use left and right pointers directly on input array. No extra space.
+EXAMPLE: Two sum sorted, 3Sum, partition array by pivot.
+
+OPTIMIZATION: Recursion to Iteration — Stack Overflow Prevention
+WHEN: Deep recursion (N up to 10^5) risks stack overflow
+UPGRADE: Replace recursive DFS with explicit stack<>. Replace recursive DP with bottom-up table.
+CPP: stack<pair<int,int>> st; st.push({node, parent});
+
+OPTIMIZATION: unordered_map over map
+WHEN: Frequency counting, existence checks, key-value storage without ordering needed
+UPGRADE: unordered_map is O(1) average vs O(log N) for map.
+CPP: unordered_map<int,int> freq; freq.reserve(n); freq.max_load_factor(0.25);
+NOTE: Reserve + low load factor prevents worst-case hash collisions on LeetCode.
+
+OPTIMIZATION: Vector reserve()
+WHEN: You know the final size of a vector before filling it
+UPGRADE: Call v.reserve(n) before push_back loop. Avoids repeated reallocation.
+CPP: vector<int> result; result.reserve(n);
+
+OPTIMIZATION: Avoid endl — Use "\n"
+WHEN: Any output loop
+UPGRADE: endl flushes the buffer every call. "\n" does not. 10x faster on large output.
+CPP: cout << ans << "\n"; NOT cout << ans << endl;
+
+OPTIMIZATION: Prefix Sum for Range Queries
+WHEN: Multiple range sum queries on static array
+UPGRADE: Build prefix sum once O(N). Answer each query O(1). Total O(N + Q).
+CPP: pre[i+1] = pre[i] + a[i]; query(l,r) = pre[r+1] - pre[l];
+
+OPTIMIZATION: Monotonic Stack — O(N) over O(N^2)
+WHEN: Next greater/smaller element, largest rectangle, stock span
+UPGRADE: Single pass with stack instead of nested loops.
+CPP: stack<int> st; // stores indices
+
+OPTIMIZATION: Bit Manipulation — O(1) tricks
+WHEN: Check power of 2, count set bits, isolate lowest bit, XOR cancellation
+x & (x-1) == 0  → x is power of 2
+__builtin_popcount(x) → count set bits, O(1)
+x ^ x = 0 → duplicate cancellation
+(x >> i) & 1 → check ith bit
+
+OPTIMIZATION: GCD for Frequency Problems
+WHEN: Maximum equal splits, tiling, dividing into identical groups
+UPGRADE: Answer = GCD of all group sizes. O(N log N) instead of trying all divisors.
+CPP: int g = 0; for (int f : freqs) g = __gcd(g, f);
+
+OPTIMIZATION: Binary Search on Answer — O(N log(MAX)) 
+WHEN: "Minimum X such that condition holds", answer space is monotonic
+UPGRADE: Instead of trying all values O(N*MAX), binary search on answer O(N log MAX).
+PATTERN: Define check(mid) → binary search between lo and hi.
+
+OPTIMIZATION: Sparse Table — O(1) Range Min/Max
+WHEN: Static array, many range minimum/maximum queries
+UPGRADE: O(N log N) build, O(1) query. Better than segment tree for static arrays.
+USE WHEN: No updates needed, just queries.
+
+OPTIMIZATION: Fast I/O Bundle
+WHEN: Any competitive programming problem
+ALWAYS ADD:
+ios::sync_with_stdio(false);
+cin.tie(NULL);
+Use "\n" not endl.
+Read all input before processing.

@@ -1,0 +1,152 @@
+PATTERN: Greedy
+TRIGGER: minimize/maximize, ordering matters, locally optimal = globally optimal
+EXAMPLES: activity selection, interval scheduling, lexicographic minimum, resource allocation
+APPROACH: Sort by key criterion. Iterate and pick greedily. Use priority_queue if dynamic min/max needed.
+C++ HINT: sort(v.begin(), v.end(), comparator); Use priority_queue<int, vector<int>, greater<int>> for min-heap.
+COMPLEXITY: O(N log N) due to sort.
+EDGE CASES: Ties in sorting key, empty input, all equal elements, single element.
+WHEN NOT GREEDY: When local optimum does not guarantee global optimum — use DP instead.
+
+PATTERN: Dynamic Programming - 1D
+TRIGGER: minimum changes, maximum subsequence, ways to reach, choices at each index, overlapping subproblems
+EXAMPLES: LIS, coin change, house robber, jump game, partition array
+APPROACH: dp[i] = answer considering first i elements. Write recurrence. Fill bottom-up.
+C++ HINT: vector<long long> dp(n+1, 0); Use INT_MAX/2 for infinity to avoid overflow.
+COMPLEXITY: O(N) to O(N^2).
+EDGE CASES: dp[0] base case, empty array, single element, negative numbers.
+
+PATTERN: Dynamic Programming - 2D String
+TRIGGER: two strings, subsequence, edit operations, transformation between strings
+EXAMPLES: LCS, edit distance, minimum deletions so X not subsequence of Y, shortest common supersequence
+APPROACH: dp[i][j] = answer for s1[0..i-1] and s2[0..j-1]. Fill 2D table row by row.
+C++ HINT: vector<vector<int>> dp(n+1, vector<int>(m+1, 0));
+RECURRENCE: if s1[i-1]==s2[j-1]: dp[i][j]=dp[i-1][j-1]+1 else max(dp[i-1][j], dp[i][j-1])
+COMPLEXITY: O(N*M) time and space.
+EDGE CASES: Empty strings, identical strings, one character.
+
+PATTERN: Dynamic Programming - Partition/Interval
+TRIGGER: split array into k parts, cut rod, burst balloons, matrix chain, minimum cost partition
+EXAMPLES: matrix chain multiplication, burst balloons, split array largest sum, stone merging
+APPROACH: dp[i][j] = optimal answer for subarray i..j. Try all split points k.
+C++ HINT: for (int len=2; len<=n; len++) for (int i=0; i+len-1<n; i++)
+COMPLEXITY: O(N^3).
+EDGE CASES: Single element, k equals N.
+
+PATTERN: Dynamic Programming - Knapsack
+TRIGGER: items with weight and value, select subset with constraint, bounded/unbounded selection
+EXAMPLES: 0/1 knapsack, unbounded knapsack, subset sum, target sum, partition equal subset
+APPROACH 0/1: dp[w] = max value with capacity w. Iterate w backwards.
+APPROACH UNBOUNDED: dp[w] = max value. Iterate forwards to allow reuse.
+C++ HINT: For 0/1 iterate w from W down to wt[i]. For unbounded iterate w from wt[i] up.
+COMPLEXITY: O(N*W).
+
+PATTERN: Dynamic Programming - Counting
+TRIGGER: number of ways, count paths, count arrangements satisfying constraint
+EXAMPLES: climbing stairs, unique paths, count BSTs, coin change ways, decode ways
+APPROACH: dp[i] = number of ways to reach state i. Sum over all valid transitions.
+C++ HINT: Use long long, take mod 1e9+7 if large numbers.
+COMPLEXITY: O(N) to O(N^2).
+EDGE CASES: dp[0]=1 (empty = one way), overflow — always use mod.
+
+PATTERN: Two Pointers
+TRIGGER: sorted array, pair/triplet with sum, remove duplicates, palindrome check
+EXAMPLES: two sum sorted, 3Sum, remove duplicates, valid palindrome, container with most water
+APPROACH: left=0, right=n-1. Move based on comparison. O(N) with no extra space.
+C++ HINT: while (left < right) { if condition: left++; else right--; }
+COMPLEXITY: O(N).
+
+PATTERN: Sliding Window
+TRIGGER: subarray/substring of fixed size, maximum/minimum in window, longest with constraint
+EXAMPLES: max sum subarray size k, longest substring without repeat, minimum window substring
+APPROACH FIXED: maintain window of size k, slide right, update answer.
+APPROACH VARIABLE: expand right, shrink left when constraint violated.
+C++ HINT: Use unordered_map<char,int> for character frequency in window.
+COMPLEXITY: O(N).
+
+PATTERN: Binary Search on Answer
+TRIGGER: minimum X such that condition holds, maximum X that is feasible, answer is monotonic
+EXAMPLES: minimum days to finish work, koko eating bananas, capacity to ship packages, aggressive cows
+APPROACH: Define check(mid). Binary search on [lo, hi].
+C++ HINT: Always use long long to avoid overflow in mid calculation.
+COMPLEXITY: O(N log(answer_range)).
+CRITICAL: check(mid) must be monotonic for binary search to work.
+
+PATTERN: Graphs - BFS
+TRIGGER: shortest path unweighted, level order, minimum steps, flood fill
+EXAMPLES: word ladder, shortest path grid, rotten oranges, bipartite check
+APPROACH: queue<int>, visited array, process level by level.
+C++ HINT: queue<pair<int,int>> for grid BFS. Use {row*cols+col} for 1D encoding.
+COMPLEXITY: O(V + E).
+
+PATTERN: Graphs - DFS
+TRIGGER: connectivity, cycle detection, topological sort, path existence
+EXAMPLES: number of islands, detect cycle, course schedule, clone graph
+APPROACH: Recursive DFS with visited array. For cycle: check visited + in-stack.
+C++ HINT: vector<bool> visited(n, false); Iterative DFS uses explicit stack<int>.
+COMPLEXITY: O(V + E).
+
+PATTERN: Graphs - Dijkstra
+TRIGGER: weighted graph, shortest path, non-negative weights
+EXAMPLES: network delay time, cheapest flights, path with minimum effort
+APPROACH: Min-heap priority queue. Relax edges greedily.
+C++ HINT: priority_queue<pair<long long,int>, vector<pair<long long,int>>, greater<>> pq;
+COMPLEXITY: O((V+E) log V).
+
+PATTERN: Backtracking
+TRIGGER: all combinations/permutations, place N items with constraints, fill grid
+EXAMPLES: N-Queens, sudoku, permutations, combination sum, word search
+APPROACH: choose, recurse, unchoose. Prune when constraint already violated.
+C++ HINT: Pass by reference and undo changes. Sort first to prune duplicates early.
+COMPLEXITY: Exponential worst case, pruning crucial.
+
+PATTERN: Monotonic Stack
+TRIGGER: next greater/smaller element, largest rectangle, trapping rain water, stock span
+EXAMPLES: next greater element, largest rectangle in histogram, daily temperatures
+APPROACH: Maintain stack of indices in increasing/decreasing order. Pop when order breaks.
+C++ HINT: stack<int> st; stores indices not values.
+COMPLEXITY: O(N) amortized.
+
+PATTERN: Frequency Map + Greedy
+TRIGGER: group elements by value, doubling constraint, maximum items with frequency rules
+EXAMPLES: HWI restaurant dishes, task scheduler, reorganize string
+APPROACH: Count frequencies. Sort frequencies. Apply greedy on freq array.
+C++ HINT: map<int,int> freq; for (int x : a) freq[x]++;
+COMPLEXITY: O(N log N).
+
+PATTERN: Mathematical Observation - Powers of 2
+TRIGGER: doubling each step, minimum days with power increase, binary representation
+EXAMPLES: HWI road terrain, minimum operations with doubling
+APPROACH: Compute maximum required value. Answer = ceil(log2(max_val)).
+C++ HINT: int days=0; while ((1LL << days) < required) days++;
+COMPLEXITY: O(N).
+
+PATTERN: Mathematical Observation - GCD
+TRIGGER: equal pieces, divide evenly, maximum splits, common factor
+EXAMPLES: HWI max string cuts, array GCD
+APPROACH: GCD of all relevant values gives maximum valid divisor.
+C++ HINT: int g=0; for (int f : freqs) g = __gcd(g, f);
+COMPLEXITY: O(N log N).
+
+PATTERN: Mathematical Observation - Modular Arithmetic
+TRIGGER: large answers, count modulo 10^9+7, combinations
+EXAMPLES: count ways, large Fibonacci
+APPROACH: Apply mod at every addition/multiplication.
+C++ HINT: const long long MOD=1e9+7; ans=(ans+val)%MOD;
+CRITICAL: (a - b + MOD) % MOD for subtraction.
+
+PATTERN: Bit Manipulation
+TRIGGER: XOR tricks, subset enumeration, check parity, power of 2, count set bits
+EXAMPLES: single number, XOR pair sum, count subsets, Hamming distance
+KEY TRICKS:
+  x & (x-1) removes lowest set bit
+  x & (-x) isolates lowest set bit
+  x ^ x = 0 XOR same number cancels
+  __builtin_popcount(x) counts set bits
+COMPLEXITY: O(1) per operation, O(2^N) subset enumeration.
+
+PATTERN: Prefix Sum
+TRIGGER: range sum queries, subarray sum equals k, 2D rectangle sum
+EXAMPLES: subarray sum queries, count subarrays with given sum
+APPROACH: pre[i] = pre[i-1] + a[i-1]. Range sum(l,r) = pre[r+1] - pre[l].
+C++ HINT: vector<long long> pre(n+1,0); for(int i=0;i<n;i++) pre[i+1]=pre[i]+a[i];
+COMPLEXITY: O(N) build, O(1) query.

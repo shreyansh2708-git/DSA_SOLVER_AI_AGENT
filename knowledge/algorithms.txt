@@ -1,0 +1,202 @@
+ALGORITHM: Sieve of Eratosthenes
+USE: Find all primes up to N.
+COMPLEXITY: O(N log log N)
+CODE C++:
+vector<bool> sieve(int n) {
+    vector<bool> is_prime(n+1, true);
+    is_prime[0] = is_prime[1] = false;
+    for (int i = 2; i * i <= n; i++)
+        if (is_prime[i])
+            for (int j = i*i; j <= n; j += i)
+                is_prime[j] = false;
+    return is_prime;
+}
+
+ALGORITHM: Binary Search on Answer
+USE: Monotonic answer space.
+COMPLEXITY: O(N log N)
+CODE C++:
+int lo = 0, hi = 1e9;
+while (lo < hi) {
+    int mid = (lo + hi) / 2;
+    if (check(mid)) hi = mid;
+    else lo = mid + 1;
+}
+// answer is lo
+
+ALGORITHM: Longest Increasing Subsequence O(N log N)
+USE: Find LIS length.
+CODE C++:
+int lis(vector<int>& a) {
+    vector<int> tails;
+    for (int x : a) {
+        auto it = lower_bound(tails.begin(), tails.end(), x);
+        if (it == tails.end()) tails.push_back(x);
+        else *it = x;
+    }
+    return tails.size();
+}
+
+ALGORITHM: Union Find (DSU)
+USE: Connected components, cycle detection.
+CODE C++:
+struct DSU {
+    vector<int> parent, rank_;
+    DSU(int n) : parent(n), rank_(n, 0) { iota(parent.begin(), parent.end(), 0); }
+    int find(int x) { return parent[x]==x ? x : parent[x]=find(parent[x]); }
+    bool unite(int x, int y) {
+        x=find(x); y=find(y); if (x==y) return false;
+        if (rank_[x]<rank_[y]) swap(x,y);
+        parent[y]=x; if (rank_[x]==rank_[y]) rank_[x]++;
+        return true;
+    }
+};
+
+ALGORITHM: BFS Shortest Path
+USE: Unweighted graph shortest path.
+CODE C++:
+vector<int> bfs(vector<vector<int>>& g, int src, int n) {
+    vector<int> dist(n, -1); queue<int> q;
+    dist[src]=0; q.push(src);
+    while (!q.empty()) {
+        int u=q.front(); q.pop();
+        for (int v : g[u]) if (dist[v]==-1) { dist[v]=dist[u]+1; q.push(v); }
+    }
+    return dist;
+}
+
+ALGORITHM: Dijkstra
+USE: Weighted graph shortest path, non-negative edges.
+COMPLEXITY: O((V+E) log V)
+CODE C++:
+vector<long long> dijkstra(vector<vector<pair<int,int>>>& g, int src, int n) {
+    vector<long long> dist(n, LLONG_MAX);
+    priority_queue<pair<long long,int>, vector<pair<long long,int>>, greater<>> pq;
+    dist[src]=0; pq.push({0,src});
+    while (!pq.empty()) {
+        auto [d,u]=pq.top(); pq.pop();
+        if (d>dist[u]) continue;
+        for (auto [v,w] : g[u])
+            if (dist[u]+w < dist[v]) { dist[v]=dist[u]+w; pq.push({dist[v],v}); }
+    }
+    return dist;
+}
+
+ALGORITHM: Topological Sort (Kahn's BFS)
+USE: DAG ordering, detect cycles.
+CODE C++:
+vector<int> toposort(vector<vector<int>>& g, int n) {
+    vector<int> indegree(n,0), order;
+    for (int u=0;u<n;u++) for (int v:g[u]) indegree[v]++;
+    queue<int> q;
+    for (int i=0;i<n;i++) if (!indegree[i]) q.push(i);
+    while (!q.empty()) {
+        int u=q.front(); q.pop(); order.push_back(u);
+        for (int v:g[u]) if (--indegree[v]==0) q.push(v);
+    }
+    return order;
+}
+
+ALGORITHM: Segment Tree (Range Sum + Point Update)
+USE: Range queries with point updates.
+COMPLEXITY: O(log N) per query/update
+CODE C++:
+struct SegTree {
+    int n; vector<long long> tree;
+    SegTree(int n):n(n),tree(4*n,0){}
+    void update(int node,int l,int r,int i,long long val) {
+        if (l==r){tree[node]=val;return;}
+        int mid=(l+r)/2;
+        if (i<=mid) update(2*node,l,mid,i,val);
+        else update(2*node+1,mid+1,r,i,val);
+        tree[node]=tree[2*node]+tree[2*node+1];
+    }
+    long long query(int node,int l,int r,int ql,int qr) {
+        if (qr<l||r<ql) return 0;
+        if (ql<=l&&r<=qr) return tree[node];
+        int mid=(l+r)/2;
+        return query(2*node,l,mid,ql,qr)+query(2*node+1,mid+1,r,ql,qr);
+    }
+    void update(int i,long long v){update(1,0,n-1,i,v);}
+    long long query(int l,int r){return query(1,0,n-1,l,r);}
+};
+
+ALGORITHM: Z-Function
+USE: Pattern matching, find all occurrences of pattern in text.
+COMPLEXITY: O(N)
+CODE C++:
+vector<int> z_function(string s) {
+    int n=s.size(); vector<int> z(n,0); z[0]=n;
+    int l=0,r=0;
+    for (int i=1;i<n;i++) {
+        if (i<r) z[i]=min(r-i,z[i-l]);
+        while (i+z[i]<n && s[z[i]]==s[i+z[i]]) z[i]++;
+        if (i+z[i]>r){l=i;r=i+z[i];}
+    }
+    return z;
+}
+
+ALGORITHM: GCD and LCM
+USE: Mathematical divisibility problems.
+CODE C++:
+long long gcd(long long a,long long b){return b?gcd(b,a%b):a;}
+long long lcm(long long a,long long b){return a/gcd(a,b)*b;}
+
+ALGORITHM: Fast Power (Binary Exponentiation)
+USE: Compute a^b mod m efficiently.
+COMPLEXITY: O(log b)
+CODE C++:
+long long power(long long base,long long exp,long long mod) {
+    long long result=1; base%=mod;
+    while (exp>0) {
+        if (exp&1) result=result*base%mod;
+        base=base*base%mod; exp>>=1;
+    }
+    return result;
+}
+
+ALGORITHM: Prefix Sum
+USE: Range sum queries in O(1).
+CODE C++:
+vector<long long> prefix(vector<int>& a) {
+    int n=a.size(); vector<long long> pre(n+1,0);
+    for (int i=0;i<n;i++) pre[i+1]=pre[i]+a[i];
+    return pre;
+}
+
+ALGORITHM: Kadane's Algorithm
+USE: Maximum sum contiguous subarray.
+COMPLEXITY: O(N)
+CODE C++:
+long long kadane(vector<int>& a) {
+    long long best=LLONG_MIN,cur=0;
+    for (int x:a){cur=max((long long)x,cur+x);best=max(best,cur);}
+    return best;
+}
+
+ALGORITHM: Monotonic Stack - Next Greater Element
+USE: For each element find next greater to its right.
+COMPLEXITY: O(N)
+CODE C++:
+vector<int> nextGreater(vector<int>& a) {
+    int n=a.size(); vector<int> res(n,-1); stack<int> st;
+    for (int i=0;i<n;i++) {
+        while (!st.empty()&&a[st.top()]<a[i]){res[st.top()]=a[i];st.pop();}
+        st.push(i);
+    }
+    return res;
+}
+
+ALGORITHM: Two Pointers - Sliding Window Variable
+USE: Longest subarray with constraint.
+COMPLEXITY: O(N)
+CODE C++:
+int maxLen(vector<int>& a, int K) {
+    int l=0,sum=0,ans=0;
+    for (int r=0;r<(int)a.size();r++) {
+        sum+=a[r];
+        while (sum>K) sum-=a[l++];
+        ans=max(ans,r-l+1);
+    }
+    return ans;
+}

@@ -1,0 +1,245 @@
+PROBLEM: Gym Energy (HWI 2024 Sample 1)
+TYPE: Greedy + Sorting
+DIFFICULTY: Easy
+APPROACH: Sort exercises descending by drain. Pick each up to 2 times greedily.
+KEY INSIGHT: Maximize drain per exercise taken to minimize total count.
+COMPLEXITY: O(N log N)
+CPP CODE:
+#include <bits/stdc++.h>
+using namespace std;
+int main() {
+    ios::sync_with_stdio(false); cin.tie(NULL);
+    long long E; int N; cin >> E >> N;
+    vector<int> A(N);
+    for (int& x : A) cin >> x;
+    sort(A.begin(), A.end(), greater<int>());
+    int count=0;
+    for (int drain : A)
+        for (int t=0;t<2;t++) { E-=drain; count++; if (E<=0){cout<<count;return 0;} }
+    cout << -1;
+}
+
+PROBLEM: Maximum String Cuts (HWI 2024 Sample 5)
+TYPE: Frequency Map + GCD
+DIFFICULTY: Easy
+KEY INSIGHT: K equal pieces requires K divides freq(c) for every character. Max K = GCD of all freqs.
+COMPLEXITY: O(N)
+CPP CODE:
+#include <bits/stdc++.h>
+using namespace std;
+int main() {
+    ios::sync_with_stdio(false); cin.tie(NULL);
+    string s; cin >> s;
+    map<char,int> freq;
+    for (char c:s) freq[c]++;
+    int g=0;
+    for (auto& [c,f]:freq) g=__gcd(g,f);
+    cout << g;
+}
+
+PROBLEM: Lexicographic Array Swap (HWI 2024 Sample 6)
+TYPE: Greedy + Array
+DIFFICULTY: Easy-Medium
+APPROACH: Leftmost index where min in window[i..i+K] < A[i], swap there. One swap only.
+COMPLEXITY: O(N*K)
+CPP CODE:
+#include <bits/stdc++.h>
+using namespace std;
+int main() {
+    ios::sync_with_stdio(false); cin.tie(NULL);
+    int N; cin >> N;
+    vector<int> A(N);
+    for (int& x:A) cin >> x;
+    int K; cin >> K;
+    for (int i=0;i<N;i++) {
+        int minVal=A[i],minIdx=i;
+        for (int j=i+1;j<=min(i+K,N-1);j++)
+            if (A[j]<minVal){minVal=A[j];minIdx=j;}
+        if (minIdx!=i){swap(A[i],A[minIdx]);break;}
+    }
+    for (int x:A) cout<<x<<"\n";
+}
+
+PROBLEM: Minimum Swaps to Sort Array
+TYPE: Greedy + Cycle Detection
+DIFFICULTY: Medium
+KEY INSIGHT: Count cycles in permutation. Answer = N - number_of_cycles.
+COMPLEXITY: O(N log N)
+CPP CODE:
+#include <bits/stdc++.h>
+using namespace std;
+int main() {
+    ios::sync_with_stdio(false); cin.tie(NULL);
+    int N; cin >> N;
+    vector<int> A(N);
+    for (int& x:A) cin >> x;
+    vector<pair<int,int>> sa(N);
+    for (int i=0;i<N;i++) sa[i]={A[i],i};
+    sort(sa.begin(),sa.end());
+    vector<bool> visited(N,false);
+    int swaps=0;
+    for (int i=0;i<N;i++) {
+        if (visited[i]||sa[i].second==i){visited[i]=true;continue;}
+        int cycle=0,j=i;
+        while (!visited[j]){visited[j]=true;j=sa[j].second;cycle++;}
+        swaps+=cycle-1;
+    }
+    cout << swaps;
+}
+
+PROBLEM: Activity Selection (Classic Greedy)
+TYPE: Greedy
+DIFFICULTY: Easy-Medium
+KEY INSIGHT: Sort by end time. Always pick interval ending earliest.
+COMPLEXITY: O(N log N)
+CPP CODE:
+#include <bits/stdc++.h>
+using namespace std;
+int main() {
+    int N; cin >> N;
+    vector<pair<int,int>> v(N);
+    for (auto& [s,e]:v) cin >> s >> e;
+    sort(v.begin(),v.end(),[](auto& a,auto& b){return a.second<b.second;});
+    int count=1,lastEnd=v[0].second;
+    for (int i=1;i<N;i++)
+        if (v[i].first>=lastEnd){count++;lastEnd=v[i].second;}
+    cout << count;
+}
+
+PROBLEM: 0/1 Knapsack
+TYPE: Dynamic Programming - Knapsack
+DIFFICULTY: Medium
+KEY INSIGHT: Iterate weight backwards so each item used at most once.
+COMPLEXITY: O(N*W)
+CPP CODE:
+#include <bits/stdc++.h>
+using namespace std;
+int main() {
+    int N,W; cin >> N >> W;
+    vector<int> wt(N),val(N);
+    for (int i=0;i<N;i++) cin >> wt[i] >> val[i];
+    vector<int> dp(W+1,0);
+    for (int i=0;i<N;i++)
+        for (int w=W;w>=wt[i];w--)
+            dp[w]=max(dp[w],dp[w-wt[i]]+val[i]);
+    cout << dp[W];
+}
+
+PROBLEM: Longest Common Subsequence
+TYPE: Dynamic Programming - 2D String
+DIFFICULTY: Medium
+COMPLEXITY: O(N*M)
+CPP CODE:
+#include <bits/stdc++.h>
+using namespace std;
+int main() {
+    string s1,s2; cin >> s1 >> s2;
+    int n=s1.size(),m=s2.size();
+    vector<vector<int>> dp(n+1,vector<int>(m+1,0));
+    for (int i=1;i<=n;i++)
+        for (int j=1;j<=m;j++)
+            dp[i][j]=(s1[i-1]==s2[j-1])?dp[i-1][j-1]+1:max(dp[i-1][j],dp[i][j-1]);
+    cout << dp[n][m];
+}
+
+PROBLEM: Number of Islands
+TYPE: Graph - DFS
+DIFFICULTY: Medium
+KEY INSIGHT: Count connected components in grid. DFS floods each island.
+COMPLEXITY: O(R*C)
+CPP CODE:
+#include <bits/stdc++.h>
+using namespace std;
+int R,C; vector<string> grid;
+void dfs(int r,int c) {
+    if (r<0||r>=R||c<0||c>=C||grid[r][c]!='1') return;
+    grid[r][c]='0';
+    dfs(r+1,c);dfs(r-1,c);dfs(r,c+1);dfs(r,c-1);
+}
+int main() {
+    cin >> R >> C; grid.resize(R);
+    for (string& row:grid) cin >> row;
+    int islands=0;
+    for (int i=0;i<R;i++)
+        for (int j=0;j<C;j++)
+            if (grid[i][j]=='1'){dfs(i,j);islands++;}
+    cout << islands;
+}
+
+PROBLEM: Trapping Rain Water
+TYPE: Two Pointers
+DIFFICULTY: Medium-Hard
+KEY INSIGHT: Water at cell = min(max_left, max_right) - height. Use two pointers O(N).
+COMPLEXITY: O(N)
+CPP CODE:
+#include <bits/stdc++.h>
+using namespace std;
+int main() {
+    int N; cin >> N;
+    vector<int> h(N);
+    for (int& x:h) cin >> x;
+    int l=0,r=N-1,lmax=0,rmax=0,water=0;
+    while (l<r) {
+        if (h[l]<=h[r]){lmax=max(lmax,h[l]);water+=lmax-h[l];l++;}
+        else {rmax=max(rmax,h[r]);water+=rmax-h[r];r--;}
+    }
+    cout << water;
+}
+
+PROBLEM: Largest Rectangle in Histogram
+TYPE: Monotonic Stack
+DIFFICULTY: Hard
+KEY INSIGHT: Maintain increasing stack. Pop when smaller bar found. Width = distance between stack neighbors.
+COMPLEXITY: O(N)
+CPP CODE:
+#include <bits/stdc++.h>
+using namespace std;
+int main() {
+    int N; cin >> N;
+    vector<int> h(N);
+    for (int& x:h) cin >> x;
+    stack<int> st; long long ans=0;
+    for (int i=0;i<=N;i++) {
+        int cur=(i==N)?0:h[i];
+        while (!st.empty()&&h[st.top()]>cur) {
+            int height=h[st.top()]; st.pop();
+            int width=st.empty()?i:i-st.top()-1;
+            ans=max(ans,(long long)height*width);
+        }
+        st.push(i);
+    }
+    cout << ans;
+}
+
+PROBLEM: Road Terrain (HWI 2024 Sample 3)
+TYPE: Mathematical Observation - Powers of 2
+DIFFICULTY: Medium-Hard
+KEY INSIGHT: Each day D gives power 2^(D-1). Find max required reduction across segments. Answer = ceil(log2(max_reduction)).
+COMPLEXITY: O(N)
+CPP CODE:
+#include <bits/stdc++.h>
+using namespace std;
+int main() {
+    ios::sync_with_stdio(false); cin.tie(NULL);
+    int N; cin >> N;
+    vector<long long> L(N);
+    for (long long& x:L) cin >> x;
+    long long maxReduce=0;
+    for (int i=1;i<N;i++) {
+        long long need=L[i]-L[i-1]+1;
+        if (need>0) maxReduce=max(maxReduce,need);
+    }
+    if (maxReduce==0){cout<<0;return 0;}
+    int days=0;
+    while ((1LL<<days)<maxReduce) days++;
+    cout << days;
+}
+
+PROBLEM: Minimum Deletions so C not Subsequence of S
+TYPE: Dynamic Programming - String
+DIFFICULTY: Hard
+APPROACH: dp[i][j] = min deletions from S[0..i-1] so C[0..j-1] not a subsequence.
+If S[i-1]!=C[j-1]: dp[i][j]=dp[i-1][j]
+If S[i-1]==C[j-1]: dp[i][j]=min(dp[i-1][j]+1, dp[i-1][j-1])
+If j==len(C): must delete, dp[i][j]=dp[i-1][j-1]+1
+COMPLEXITY: O(|S|*|C|)
