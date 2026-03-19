@@ -215,7 +215,7 @@ with st.sidebar:
         <div class="sidebar-card-title">🛠️ Stack</div>
         <div class="sidebar-item">🤖 <span>Llama 3.3 70B (Groq)</span></div>
         <div class="sidebar-item">🔗 <span>LangGraph</span></div>
-        <div class="sidebar-item">🗄️ <span>FAISS RAG</span></div>
+        <div class="sidebar-item">🗄️ <span>ChromaDb RAG</span></div>
         <div class="sidebar-item">🌐 <span>Tavily Search</span></div>
         <div class="sidebar-item">💡 <span>C++17 Output</span></div>
     </div>
